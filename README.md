@@ -3,3 +3,5 @@
 Integrantes do grupo: Atharv Nuthi, Bruno Marchiori, Felipe Figueiredo, Marcos Vinícius, Mateus Maia
 
 Link para o documento Google Docs do trabalho para a entrega 1: https://docs.google.com/document/d/1rJsWoiDZ14ZtSVWRscpIt-rRxqxax1kx6l3lzwLJG2c/edit?usp=sharing
+
+Slides para a primeira apresentação: https://www.canva.com/design/DAGn1goEXkQ/tzpK5EKaEjpPlYsb8vXIzQ/edit?utm_content=DAGn1goEXkQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
