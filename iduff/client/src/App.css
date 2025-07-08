@@ -1,0 +1,46 @@
+/* App-specific styles - using Tailwind utilities */
+.app {
+  @apply min-h-screen flex flex-col;
+}
+
+.main-content {
+  @apply flex-1 py-8;
+}
+
+.sidebar {
+  @apply w-64 bg-white border-r border-gray-200 p-4 shadow-sm;
+}
+
+.layout {
+  display: flex;
+  min-height: calc(100vh - 80px);
+}
+
+.content-area {
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--background-color);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
