@@ -7,6 +7,7 @@ import com.iduff.iduff_server.entity.Disciplina;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -14,9 +15,9 @@ import java.util.HashMap;
 public class CursoServiceImpl implements ICursoService {
 
     // In-memory storage for demo purposes
-    private final Map<String, Curso> cursos = new HashMap<>();
-    private final Map<String, Disciplina> disciplinas = new HashMap<>();
-    private final Map<String, List<String>> cursoDisciplinas = new HashMap<>();
+    private final Map<UUID, Curso> cursos = new HashMap<>();
+    private final Map<UUID, Disciplina> disciplinas = new HashMap<>();
+    private final Map<UUID, List<UUID>> cursoDisciplinas = new HashMap<>();
 
     @Override
     public Curso criarCurso(DadosCurso dados) {
@@ -27,7 +28,7 @@ public class CursoServiceImpl implements ICursoService {
     }
 
     @Override
-    public Curso atualizarCurso(String cursoId, DadosCurso dados) {
+    public Curso atualizarCurso(UUID cursoId, DadosCurso dados) {
         Curso curso = cursos.get(cursoId);
 
         if (curso != null) {
@@ -39,7 +40,7 @@ public class CursoServiceImpl implements ICursoService {
     }
 
     @Override
-    public Curso obterCurso(String cursoId) {
+    public Curso obterCurso(UUID cursoId) {
         return cursos.get(cursoId);
     }
 
@@ -49,9 +50,9 @@ public class CursoServiceImpl implements ICursoService {
     }
 
     @Override
-    public void associarDisciplinaAoCurso(String cursoId, String disciplinaId) {
+    public void associarDisciplinaAoCurso(UUID cursoId, UUID disciplinaId) {
         if (cursos.containsKey(cursoId) && disciplinas.containsKey(disciplinaId)) {
-            List<String> disciplinasDoCurso = cursoDisciplinas.get(cursoId);
+            List<UUID> disciplinasDoCurso = cursoDisciplinas.get(cursoId);
             if (!disciplinasDoCurso.contains(disciplinaId)) {
                 disciplinasDoCurso.add(disciplinaId);
             }
@@ -59,9 +60,9 @@ public class CursoServiceImpl implements ICursoService {
     }
 
     @Override
-    public void desassociarDisciplinaDoCurso(String cursoId, String disciplinaId) {
+    public void desassociarDisciplinaDoCurso(UUID cursoId, UUID disciplinaId) {
         if (cursos.containsKey(cursoId)) {
-            List<String> disciplinasDoCurso = cursoDisciplinas.get(cursoId);
+            List<UUID> disciplinasDoCurso = cursoDisciplinas.get(cursoId);
             disciplinasDoCurso.remove(disciplinaId);
         }
     }

@@ -3,6 +3,7 @@ package com.iduff.iduff_server.service.impl;
 import com.iduff.iduff_server.service.IIntegracaoCEDERJService;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class IntegracaoCEDERJServiceImpl implements IIntegracaoCEDERJService {
@@ -22,20 +23,11 @@ public class IntegracaoCEDERJServiceImpl implements IIntegracaoCEDERJService {
     }
 
     @Override
-    public void enviarNotasParaCEDERJ(List<String> notaIds) {
-        // Simulated integration with CEDERJ system
+    public void enviarNotasParaCEDERJ(List<UUID> notaIds) {
         System.out.println("Enviando " + notaIds.size() + " notas para sistema CEDERJ...");
-
-        // In a real implementation, this would:
-        // 1. Retrieve notes from local database
-        // 2. Format data according to CEDERJ specifications
-        // 3. Send via API or batch file
-        // 4. Handle response and error cases
-
-        for (String notaId : notaIds) {
+        for (UUID notaId : notaIds) {
             System.out.println("Enviando nota ID: " + notaId);
         }
-
         System.out.println("Envio de notas concluído com sucesso.");
     }
 

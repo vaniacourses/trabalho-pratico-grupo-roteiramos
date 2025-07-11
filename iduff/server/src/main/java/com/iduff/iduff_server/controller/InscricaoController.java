@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/inscricoes")
@@ -21,8 +22,8 @@ public class InscricaoController {
     @PostMapping("/solicitacao")
     public ResponseEntity<Solicitacao> iniciarSolicitacaoInscricao(@RequestBody Map<String, String> dados) {
         try {
-            String alunoId = dados.get("alunoId");
-            String turmaId = dados.get("turmaId");
+            UUID alunoId = UUID.fromString(dados.get("alunoId"));
+            UUID turmaId = UUID.fromString(dados.get("turmaId"));
 
             Solicitacao solicitacao = inscricaoService.iniciarSolicitacaoInscricao(alunoId, turmaId);
             return ResponseEntity.ok(solicitacao);
@@ -35,8 +36,9 @@ public class InscricaoController {
     public ResponseEntity<Void> aprovarSolicitacao(@PathVariable String solicitacaoId,
             @RequestBody Map<String, String> dados) {
         try {
-            String coordenadorId = dados.get("coordenadorId");
-            inscricaoService.aprovarSolicitacao(solicitacaoId, coordenadorId);
+            UUID solId = UUID.fromString(solicitacaoId);
+            UUID coordenadorId = UUID.fromString(dados.get("coordenadorId"));
+            inscricaoService.aprovarSolicitacao(solId, coordenadorId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -47,9 +49,10 @@ public class InscricaoController {
     public ResponseEntity<Void> reprovarSolicitacao(@PathVariable String solicitacaoId,
             @RequestBody Map<String, String> dados) {
         try {
-            String coordenadorId = dados.get("coordenadorId");
+            UUID solId = UUID.fromString(solicitacaoId);
+            UUID coordenadorId = UUID.fromString(dados.get("coordenadorId"));
             String motivo = dados.get("motivo");
-            inscricaoService.reprovarSolicitacao(solicitacaoId, coordenadorId, motivo);
+            inscricaoService.reprovarSolicitacao(solId, coordenadorId, motivo);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -59,7 +62,8 @@ public class InscricaoController {
     @PostMapping("/{solicitacaoId}/realizar")
     public ResponseEntity<Inscricao> realizarInscricao(@PathVariable String solicitacaoId) {
         try {
-            Inscricao inscricao = inscricaoService.realizarInscricao(solicitacaoId);
+            UUID solId = UUID.fromString(solicitacaoId);
+            Inscricao inscricao = inscricaoService.realizarInscricao(solId);
             return ResponseEntity.ok(inscricao);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -69,7 +73,9 @@ public class InscricaoController {
     @DeleteMapping("/{inscricaoId}")
     public ResponseEntity<Void> cancelarInscricao(@PathVariable String inscricaoId, @RequestParam String alunoId) {
         try {
-            inscricaoService.cancelarInscricao(inscricaoId, alunoId);
+            UUID inscId = UUID.fromString(inscricaoId);
+            UUID alunoUUID = UUID.fromString(alunoId);
+            inscricaoService.cancelarInscricao(inscId, alunoUUID);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -78,13 +84,15 @@ public class InscricaoController {
 
     @GetMapping("/aluno/{alunoId}")
     public ResponseEntity<List<Inscricao>> obterInscricoesAluno(@PathVariable String alunoId) {
-        List<Inscricao> inscricoes = inscricaoService.obterInscricoesAluno(alunoId);
+        UUID alunoUUID = UUID.fromString(alunoId);
+        List<Inscricao> inscricoes = inscricaoService.obterInscricoesAluno(alunoUUID);
         return ResponseEntity.ok(inscricoes);
     }
 
     @GetMapping("/{inscricaoId}")
     public ResponseEntity<Inscricao> obterDetalhesInscricao(@PathVariable String inscricaoId) {
-        Inscricao inscricao = inscricaoService.obterDetalhesInscricao(inscricaoId);
+        UUID inscId = UUID.fromString(inscricaoId);
+        Inscricao inscricao = inscricaoService.obterDetalhesInscricao(inscId);
 
         if (inscricao != null) {
             return ResponseEntity.ok(inscricao);

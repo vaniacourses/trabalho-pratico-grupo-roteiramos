@@ -1,11 +1,15 @@
 package com.iduff.iduff_server.entity;
 
 import com.iduff.iduff_server.enums.TipoUsuario;
+import jakarta.persistence.*;
 
+@Entity
+@DiscriminatorValue("ALUNO")
 public class Aluno extends Usuario {
+
+    @Column(nullable = true, unique = true)
     private String matricula;
 
-    // Constructors
     public Aluno() {
         super();
         this.tipo = TipoUsuario.ALUNO;
@@ -16,7 +20,6 @@ public class Aluno extends Usuario {
         this.matricula = matricula;
     }
 
-    // Getters and Setters
     public String getMatricula() {
         return matricula;
     }

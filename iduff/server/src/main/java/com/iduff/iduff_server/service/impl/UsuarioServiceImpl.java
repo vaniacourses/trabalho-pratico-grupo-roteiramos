@@ -8,17 +8,23 @@ import com.iduff.iduff_server.entity.Aluno;
 import com.iduff.iduff_server.entity.Professor;
 import com.iduff.iduff_server.entity.Coordenador;
 import com.iduff.iduff_server.enums.TipoUsuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.iduff.iduff_server.repository.UsuarioRepository;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 import java.util.HashMap;
 
 @Service
 public class UsuarioServiceImpl implements IUsuarioService {
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     // In-memory storage for demo purposes
-    private final Map<String, Usuario> usuarios = new HashMap<>();
+    private final Map<UUID, Usuario> usuarios = new HashMap<>();
     private final Map<String, Usuario> usuariosPorLogin = new HashMap<>();
 
     @Override
@@ -47,17 +53,13 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
     @Override
     public Usuario autenticarUsuario(String login, String senha) {
-        Usuario usuario = usuariosPorLogin.get(login);
-
-        if (usuario != null && usuario.validarSenha(senha)) {
-            return usuario;
-        }
-
-        return null;
+        return usuarioRepository.findByLogin(login)
+            .filter(u -> u.validarSenha(senha))
+            .orElse(null);
     }
 
     @Override
-    public Usuario atualizarPerfil(String usuarioId, DadosPerfil dados) {
+    public Usuario atualizarPerfil(UUID usuarioId, DadosPerfil dados) {
         Usuario usuario = usuarios.get(usuarioId);
 
         if (usuario != null) {
@@ -76,30 +78,28 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }
 
     @Override
-    public Usuario obterPerfilUsuario(String usuarioId) {
+    public Usuario obterPerfilUsuario(UUID usuarioId) {
         return usuarios.get(usuarioId);
     }
 
     @Override
-    public List<Usuario> listarUsuarios(TipoUsuario tipo) {
-        List<Usuario> resultado = new ArrayList<>();
-
-        for (Usuario usuario : usuarios.values()) {
-            if (tipo == null || usuario.getTipo() == tipo) {
-                resultado.add(usuario);
-            }
-        }
-
-        return resultado;
-    }
-
-    @Override
-    public void desativarUsuario(String usuarioId) {
+    public void desativarUsuario(UUID usuarioId) {
         Usuario usuario = usuarios.get(usuarioId);
 
         if (usuario != null) {
             usuariosPorLogin.remove(usuario.getLogin());
             usuarios.remove(usuarioId);
         }
+    }
+
+    @Override
+    public List<Usuario> listarUsuarios(TipoUsuario tipo) {
+        List<Usuario> resultado = new ArrayList<>();
+        for (Usuario usuario : usuarios.values()) {
+            if (usuario.getTipo() == tipo) {
+                resultado.add(usuario);
+            }
+        }
+        return resultado;
     }
 }

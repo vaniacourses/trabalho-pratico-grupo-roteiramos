@@ -3,15 +3,16 @@ package com.iduff.iduff_server.service;
 import com.iduff.iduff_server.entity.Nota;
 import com.iduff.iduff_server.entity.Comprovante;
 import java.util.List;
+import java.util.UUID;
 
 public interface IDocumentoService {
-    Nota lancarNota(String inscricaoId, double valorNota, String observacoes);
+    Nota lancarNota(UUID inscricaoId, double valorNota, String observacoes);
 
-    Comprovante gerarHistoricoEscolar(String alunoId);
+    Comprovante gerarHistoricoEscolar(UUID alunoId);
 
-    Comprovante gerarComprovanteInscricao(String inscricaoId);
+    Comprovante gerarComprovanteInscricao(UUID inscricaoId);
 
-    Nota consultarNota(String notaId);
+    Nota consultarNota(UUID notaId);
 
-    List<Nota> consultarNotasAlunoDisciplina(String alunoId, String disciplinaId);
+    List<Nota> consultarNotasAlunoDisciplina(UUID alunoId, UUID disciplinaId);
 }

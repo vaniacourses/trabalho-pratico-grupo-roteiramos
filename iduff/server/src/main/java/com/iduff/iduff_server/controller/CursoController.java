@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/cursos")
@@ -29,7 +30,7 @@ public class CursoController {
     }
 
     @PutMapping("/{cursoId}")
-    public ResponseEntity<Curso> atualizarCurso(@PathVariable String cursoId, @RequestBody DadosCurso dados) {
+    public ResponseEntity<Curso> atualizarCurso(@PathVariable UUID cursoId, @RequestBody DadosCurso dados) {
         try {
             Curso curso = cursoService.atualizarCurso(cursoId, dados);
             if (curso != null) {
@@ -43,7 +44,7 @@ public class CursoController {
     }
 
     @GetMapping("/{cursoId}")
-    public ResponseEntity<Curso> obterCurso(@PathVariable String cursoId) {
+    public ResponseEntity<Curso> obterCurso(@PathVariable UUID cursoId) {
         Curso curso = cursoService.obterCurso(cursoId);
 
         if (curso != null) {
@@ -60,10 +61,10 @@ public class CursoController {
     }
 
     @PostMapping("/{cursoId}/disciplinas")
-    public ResponseEntity<Void> associarDisciplinaAoCurso(@PathVariable String cursoId,
+    public ResponseEntity<Void> associarDisciplinaAoCurso(@PathVariable UUID cursoId,
             @RequestBody Map<String, String> dados) {
         try {
-            String disciplinaId = dados.get("disciplinaId");
+            UUID disciplinaId = UUID.fromString(dados.get("disciplinaId"));
             cursoService.associarDisciplinaAoCurso(cursoId, disciplinaId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -72,8 +73,8 @@ public class CursoController {
     }
 
     @DeleteMapping("/{cursoId}/disciplinas/{disciplinaId}")
-    public ResponseEntity<Void> desassociarDisciplinaDoCurso(@PathVariable String cursoId,
-            @PathVariable String disciplinaId) {
+    public ResponseEntity<Void> desassociarDisciplinaDoCurso(@PathVariable UUID cursoId,
+            @PathVariable UUID disciplinaId) {
         try {
             cursoService.desassociarDisciplinaDoCurso(cursoId, disciplinaId);
             return ResponseEntity.ok().build();

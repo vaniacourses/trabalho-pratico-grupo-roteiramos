@@ -7,20 +7,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 import java.util.HashMap;
 
 @Service
 public class InscricaoServiceImpl implements IInscricaoService {
 
     // In-memory storage for demo purposes
-    private final Map<String, Solicitacao> solicitacoes = new HashMap<>();
-    private final Map<String, Inscricao> inscricoes = new HashMap<>();
-    private final Map<String, Aluno> alunos = new HashMap<>();
-    private final Map<String, Turma> turmas = new HashMap<>();
-    private final Map<String, Coordenador> coordenadores = new HashMap<>();
+    private final Map<UUID, Solicitacao> solicitacoes = new HashMap<>();
+    private final Map<UUID, Inscricao> inscricoes = new HashMap<>();
+    private final Map<UUID, Aluno> alunos = new HashMap<>();
+    private final Map<UUID, Turma> turmas = new HashMap<>();
+    private final Map<UUID, Coordenador> coordenadores = new HashMap<>();
 
     @Override
-    public Solicitacao iniciarSolicitacaoInscricao(String alunoId, String turmaId) {
+    public Solicitacao iniciarSolicitacaoInscricao(UUID alunoId, UUID turmaId) {
         Aluno aluno = alunos.get(alunoId);
         Turma turma = turmas.get(turmaId);
 
@@ -35,7 +36,7 @@ public class InscricaoServiceImpl implements IInscricaoService {
     }
 
     @Override
-    public void aprovarSolicitacao(String solicitacaoId, String coordenadorId) {
+    public void aprovarSolicitacao(UUID solicitacaoId, UUID coordenadorId) {
         Solicitacao solicitacao = solicitacoes.get(solicitacaoId);
         Coordenador coordenador = coordenadores.get(coordenadorId);
 
@@ -45,7 +46,7 @@ public class InscricaoServiceImpl implements IInscricaoService {
     }
 
     @Override
-    public void reprovarSolicitacao(String solicitacaoId, String coordenadorId, String motivo) {
+    public void reprovarSolicitacao(UUID solicitacaoId, UUID coordenadorId, String motivo) {
         Solicitacao solicitacao = solicitacoes.get(solicitacaoId);
         Coordenador coordenador = coordenadores.get(coordenadorId);
 
@@ -55,7 +56,7 @@ public class InscricaoServiceImpl implements IInscricaoService {
     }
 
     @Override
-    public Inscricao realizarInscricao(String solicitacaoId) {
+    public Inscricao realizarInscricao(UUID solicitacaoId) {
         Solicitacao solicitacao = solicitacoes.get(solicitacaoId);
 
         if (solicitacao == null || solicitacao.getStatus() != StatusSolicitacao.APROVADA) {
@@ -69,7 +70,7 @@ public class InscricaoServiceImpl implements IInscricaoService {
     }
 
     @Override
-    public void cancelarInscricao(String inscricaoId, String alunoId) {
+    public void cancelarInscricao(UUID inscricaoId, UUID alunoId) {
         Inscricao inscricao = inscricoes.get(inscricaoId);
 
         if (inscricao != null && inscricao.getAluno().getId().equals(alunoId)) {
@@ -78,7 +79,7 @@ public class InscricaoServiceImpl implements IInscricaoService {
     }
 
     @Override
-    public List<Inscricao> obterInscricoesAluno(String alunoId) {
+    public List<Inscricao> obterInscricoesAluno(UUID alunoId) {
         List<Inscricao> resultado = new ArrayList<>();
 
         for (Inscricao inscricao : inscricoes.values()) {
@@ -91,7 +92,7 @@ public class InscricaoServiceImpl implements IInscricaoService {
     }
 
     @Override
-    public Inscricao obterDetalhesInscricao(String inscricaoId) {
+    public Inscricao obterDetalhesInscricao(UUID inscricaoId) {
         return inscricoes.get(inscricaoId);
     }
 }

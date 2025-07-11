@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 import java.util.HashMap;
 
 @Service
 public class DisciplinaServiceImpl implements IDisciplinaService {
 
     // In-memory storage for demo purposes
-    private final Map<String, Disciplina> disciplinas = new HashMap<>();
+    private final Map<UUID, Disciplina> disciplinas = new HashMap<>();
 
     @Override
     public Disciplina criarDisciplina(DadosDisciplina dados) {
@@ -24,7 +25,7 @@ public class DisciplinaServiceImpl implements IDisciplinaService {
     }
 
     @Override
-    public Disciplina atualizarDisciplina(String disciplinaId, DadosDisciplina dados) {
+    public Disciplina atualizarDisciplina(UUID disciplinaId, DadosDisciplina dados) {
         Disciplina disciplina = disciplinas.get(disciplinaId);
 
         if (disciplina != null) {
@@ -38,7 +39,7 @@ public class DisciplinaServiceImpl implements IDisciplinaService {
     }
 
     @Override
-    public Disciplina obterDisciplina(String disciplinaId) {
+    public Disciplina obterDisciplina(UUID disciplinaId) {
         return disciplinas.get(disciplinaId);
     }
 
@@ -48,7 +49,7 @@ public class DisciplinaServiceImpl implements IDisciplinaService {
     }
 
     @Override
-    public void associarPreRequisito(String disciplinaId, String preRequisitoId) {
+    public void associarPreRequisito(UUID disciplinaId, UUID preRequisitoId) {
         Disciplina disciplina = disciplinas.get(disciplinaId);
         Disciplina preRequisito = disciplinas.get(preRequisitoId);
 
@@ -58,7 +59,7 @@ public class DisciplinaServiceImpl implements IDisciplinaService {
     }
 
     @Override
-    public void desassociarPreRequisito(String disciplinaId, String preRequisitoId) {
+    public void desassociarPreRequisito(UUID disciplinaId, UUID preRequisitoId) {
         Disciplina disciplina = disciplinas.get(disciplinaId);
         Disciplina preRequisito = disciplinas.get(preRequisitoId);
 

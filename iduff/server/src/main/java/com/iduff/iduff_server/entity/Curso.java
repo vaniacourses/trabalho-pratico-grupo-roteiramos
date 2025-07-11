@@ -1,29 +1,36 @@
 package com.iduff.iduff_server.entity;
 
+import jakarta.persistence.*;
 import java.util.UUID;
 
+@Entity
+@Table(name = "curso")
 public class Curso {
-    private String id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    @Column(nullable = false)
     private String nome;
+
+    @Column(nullable = false, unique = true)
     private String codigo;
 
     // Constructors
-    public Curso() {
-        this.id = UUID.randomUUID().toString();
-    }
+    public Curso() {}
 
     public Curso(String nome, String codigo) {
-        this();
         this.nome = nome;
         this.codigo = codigo;
     }
 
     // Getters and Setters
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

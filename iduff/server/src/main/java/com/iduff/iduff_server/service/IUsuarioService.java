@@ -5,17 +5,18 @@ import com.iduff.iduff_server.dto.DadosPerfil;
 import com.iduff.iduff_server.entity.Usuario;
 import com.iduff.iduff_server.enums.TipoUsuario;
 import java.util.List;
+import java.util.UUID;
 
 public interface IUsuarioService {
     Usuario criarUsuario(DadosUsuario dados);
 
     Usuario autenticarUsuario(String login, String senha);
 
-    Usuario atualizarPerfil(String usuarioId, DadosPerfil dados);
+    Usuario atualizarPerfil(UUID usuarioId, DadosPerfil dados);
 
-    Usuario obterPerfilUsuario(String usuarioId);
+    Usuario obterPerfilUsuario(UUID usuarioId);
 
     List<Usuario> listarUsuarios(TipoUsuario tipo);
 
-    void desativarUsuario(String usuarioId);
+    void desativarUsuario(UUID usuarioId);
 }

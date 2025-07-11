@@ -40,53 +40,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (credentials: LoginCredentials): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Mock API call - replace with actual API call later
-      const mockUsers = [
-        {
-          id: "1",
-          nome: "João Silva",
-          login: "joao.silva",
-          email: "joao.silva@id.uff.br",
-          cpf: "123.456.789-00",
-          telefone: "(21) 99999-9999",
-          tipo: "ALUNO" as const,
-          role: "ALUNO" as const,
-          status: "ATIVO" as const,
-          dataRegistro: new Date("2023-01-15"),
-          matricula: "2023001",
-        },
-        {
-          id: "2",
-          nome: "Prof. Maria Santos",
-          login: "maria.santos",
-          email: "maria.santos@id.uff.br",
-          cpf: "987.654.321-00",
-          telefone: "(21) 88888-8888",
-          tipo: "PROFESSOR" as const,
-          role: "PROFESSOR" as const,
-          status: "ATIVO" as const,
-          dataRegistro: new Date("2022-08-20"),
-          departamento: "Ciência da Computação",
-        },
-        {
-          id: "3",
-          nome: "Dr. Carlos Coordenador",
-          login: "carlos.coord",
-          email: "carlos.coord@id.uff.br",
-          cpf: "111.222.333-44",
-          telefone: "(21) 77777-7777",
-          tipo: "COORDENADOR" as const,
-          role: "COORDENADOR" as const,
-          status: "ATIVO" as const,
-          dataRegistro: new Date("2022-03-10"),
-        },
-      ];
-
-      const user = mockUsers.find((u) => u.login === credentials.login);
-
-      if (user && credentials.senha === "123456") {
-        setUser(user);
-        localStorage.setItem("user", JSON.stringify(user));
+      const response = await fetch("/api/usuarios/autenticar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
+      });
+      console.log("Login response:", response);
+      if (response.ok) {
+        const data = await response.json();
+        // Corrija aqui: salve apenas data.usuario
+        setUser(data.usuario);
+        localStorage.setItem("user", JSON.stringify(data.usuario));
         setIsLoading(false);
         return true;
       } else {
@@ -94,7 +58,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return false;
       }
     } catch (error) {
-      console.error("Login error:", error);
       setIsLoading(false);
       return false;
     }

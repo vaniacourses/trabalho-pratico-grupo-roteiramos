@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/integracao-cederj")
@@ -29,7 +30,8 @@ public class IntegracaoCederjController {
     @PostMapping("/enviar-notas")
     public ResponseEntity<Map<String, String>> enviarNotasParaCEDERJ(@RequestBody Map<String, List<String>> dados) {
         try {
-            List<String> notaIds = dados.get("notaIds");
+            List<String> notaIdsStr = dados.get("notaIds");
+            List<UUID> notaIds = notaIdsStr.stream().map(UUID::fromString).toList();
             integracaoCEDERJService.enviarNotasParaCEDERJ(notaIds);
             return ResponseEntity.ok(Map.of("message", "Notas enviadas com sucesso"));
         } catch (Exception e) {

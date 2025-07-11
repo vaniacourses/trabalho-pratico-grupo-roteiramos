@@ -1,11 +1,16 @@
 package com.iduff.iduff_server.entity;
 
 import com.iduff.iduff_server.enums.TipoUsuario;
+import jakarta.persistence.*;
 
+@Entity
+@DiscriminatorValue("COORDENADOR")
 public class Coordenador extends Usuario {
+
+    @ManyToOne
+    @JoinColumn(name = "curso_coordenado_id")
     private Curso cursoCoordenado;
 
-    // Constructors
     public Coordenador() {
         super();
         this.tipo = TipoUsuario.COORDENADOR;
@@ -16,7 +21,6 @@ public class Coordenador extends Usuario {
         this.cursoCoordenado = cursoCoordenado;
     }
 
-    // Getters and Setters
     public Curso getCursoCoordenado() {
         return cursoCoordenado;
     }

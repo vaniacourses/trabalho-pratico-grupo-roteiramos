@@ -7,19 +7,19 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 import java.util.HashMap;
 
 @Service
 public class DocumentoServiceImpl implements IDocumentoService {
 
-    // In-memory storage for demo purposes
-    private final Map<String, Nota> notas = new HashMap<>();
-    private final Map<String, Comprovante> comprovantes = new HashMap<>();
-    private final Map<String, Inscricao> inscricoes = new HashMap<>();
-    private final Map<String, Aluno> alunos = new HashMap<>();
+    private final Map<UUID, Nota> notas = new HashMap<>();
+    private final Map<UUID, Comprovante> comprovantes = new HashMap<>();
+    private final Map<UUID, Inscricao> inscricoes = new HashMap<>();
+    private final Map<UUID, Aluno> alunos = new HashMap<>();
 
     @Override
-    public Nota lancarNota(String inscricaoId, double valorNota, String observacoes) {
+    public Nota lancarNota(UUID inscricaoId, double valorNota, String observacoes) {
         Inscricao inscricao = inscricoes.get(inscricaoId);
 
         if (inscricao == null) {
@@ -37,7 +37,7 @@ public class DocumentoServiceImpl implements IDocumentoService {
     }
 
     @Override
-    public Comprovante gerarHistoricoEscolar(String alunoId) {
+    public Comprovante gerarHistoricoEscolar(UUID alunoId) {
         Aluno aluno = alunos.get(alunoId);
 
         if (aluno == null) {
@@ -56,7 +56,7 @@ public class DocumentoServiceImpl implements IDocumentoService {
     }
 
     @Override
-    public Comprovante gerarComprovanteInscricao(String inscricaoId) {
+    public Comprovante gerarComprovanteInscricao(UUID inscricaoId) {
         Inscricao inscricao = inscricoes.get(inscricaoId);
 
         if (inscricao == null) {
@@ -76,12 +76,12 @@ public class DocumentoServiceImpl implements IDocumentoService {
     }
 
     @Override
-    public Nota consultarNota(String notaId) {
+    public Nota consultarNota(UUID notaId) {
         return notas.get(notaId);
     }
 
     @Override
-    public List<Nota> consultarNotasAlunoDisciplina(String alunoId, String disciplinaId) {
+    public List<Nota> consultarNotasAlunoDisciplina(UUID alunoId, UUID disciplinaId) {
         List<Nota> resultado = new ArrayList<>();
 
         for (Nota nota : notas.values()) {

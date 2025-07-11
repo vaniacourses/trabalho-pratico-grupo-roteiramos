@@ -3,19 +3,20 @@ package com.iduff.iduff_server.service;
 import com.iduff.iduff_server.entity.Solicitacao;
 import com.iduff.iduff_server.entity.Inscricao;
 import java.util.List;
+import java.util.UUID;
 
 public interface IInscricaoService {
-    Solicitacao iniciarSolicitacaoInscricao(String alunoId, String turmaId);
+    Solicitacao iniciarSolicitacaoInscricao(UUID alunoId, UUID turmaId);
 
-    void aprovarSolicitacao(String solicitacaoId, String coordenadorId);
+    void aprovarSolicitacao(UUID solicitacaoId, UUID coordenadorId);
 
-    void reprovarSolicitacao(String solicitacaoId, String coordenadorId, String motivo);
+    void reprovarSolicitacao(UUID solicitacaoId, UUID coordenadorId, String motivo);
 
-    Inscricao realizarInscricao(String solicitacaoId);
+    Inscricao realizarInscricao(UUID solicitacaoId);
 
-    void cancelarInscricao(String inscricaoId, String alunoId);
+    void cancelarInscricao(UUID inscricaoId, UUID alunoId);
 
-    List<Inscricao> obterInscricoesAluno(String alunoId);
+    List<Inscricao> obterInscricoesAluno(UUID alunoId);
 
-    Inscricao obterDetalhesInscricao(String inscricaoId);
+    Inscricao obterDetalhesInscricao(UUID inscricaoId);
 }

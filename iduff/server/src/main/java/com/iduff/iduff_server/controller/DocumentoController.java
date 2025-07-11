@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/documentos")
@@ -21,7 +22,7 @@ public class DocumentoController {
     @PostMapping("/notas")
     public ResponseEntity<Nota> lancarNota(@RequestBody Map<String, Object> dados) {
         try {
-            String inscricaoId = (String) dados.get("inscricaoId");
+            UUID inscricaoId = UUID.fromString((String) dados.get("inscricaoId"));
             double valorNota = ((Number) dados.get("valorNota")).doubleValue();
             String observacoes = (String) dados.get("observacoes");
 
@@ -35,7 +36,8 @@ public class DocumentoController {
     @PostMapping("/historico/{alunoId}")
     public ResponseEntity<Comprovante> gerarHistoricoEscolar(@PathVariable String alunoId) {
         try {
-            Comprovante comprovante = documentoService.gerarHistoricoEscolar(alunoId);
+            UUID id = UUID.fromString(alunoId);
+            Comprovante comprovante = documentoService.gerarHistoricoEscolar(id);
             return ResponseEntity.ok(comprovante);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -45,7 +47,8 @@ public class DocumentoController {
     @PostMapping("/comprovante-inscricao/{inscricaoId}")
     public ResponseEntity<Comprovante> gerarComprovanteInscricao(@PathVariable String inscricaoId) {
         try {
-            Comprovante comprovante = documentoService.gerarComprovanteInscricao(inscricaoId);
+            UUID id = UUID.fromString(inscricaoId);
+            Comprovante comprovante = documentoService.gerarComprovanteInscricao(id);
             return ResponseEntity.ok(comprovante);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -54,7 +57,8 @@ public class DocumentoController {
 
     @GetMapping("/notas/{notaId}")
     public ResponseEntity<Nota> consultarNota(@PathVariable String notaId) {
-        Nota nota = documentoService.consultarNota(notaId);
+        UUID id = UUID.fromString(notaId);
+        Nota nota = documentoService.consultarNota(id);
 
         if (nota != null) {
             return ResponseEntity.ok(nota);
@@ -66,7 +70,9 @@ public class DocumentoController {
     @GetMapping("/notas/aluno/{alunoId}/disciplina/{disciplinaId}")
     public ResponseEntity<List<Nota>> consultarNotasAlunoDisciplina(@PathVariable String alunoId,
             @PathVariable String disciplinaId) {
-        List<Nota> notas = documentoService.consultarNotasAlunoDisciplina(alunoId, disciplinaId);
+        UUID alunoUUID = UUID.fromString(alunoId);
+        UUID disciplinaUUID = UUID.fromString(disciplinaId);
+        List<Nota> notas = documentoService.consultarNotasAlunoDisciplina(alunoUUID, disciplinaUUID);
         return ResponseEntity.ok(notas);
     }
 }

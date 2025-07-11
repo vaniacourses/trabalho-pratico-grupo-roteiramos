@@ -5,6 +5,7 @@ import com.iduff.iduff_server.dto.DadosUsuario;
 import com.iduff.iduff_server.dto.DadosPerfil;
 import com.iduff.iduff_server.entity.Usuario;
 import com.iduff.iduff_server.enums.TipoUsuario;
+import com.iduff.iduff_server.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -32,19 +34,18 @@ public class UsuarioController {
     }
 
     @PostMapping("/autenticar")
-    public ResponseEntity<Map<String, Object>> autenticarUsuario(@RequestBody Map<String, String> credenciais) {
-        String login = credenciais.get("login");
-        String senha = credenciais.get("senha");
+    public ResponseEntity<Map<String, Object>> autenticarUsuario(@RequestBody LoginRequest credenciais) {
+        String login = credenciais.getLogin();
+        String senha = credenciais.getSenha();
 
         Usuario usuario = usuarioService.autenticarUsuario(login, senha);
 
+        Map<String, Object> response = new HashMap<>();
         if (usuario != null) {
-            Map<String, Object> response = new HashMap<>();
             response.put("usuario", usuario);
             response.put("autenticado", true);
             return ResponseEntity.ok(response);
         } else {
-            Map<String, Object> response = new HashMap<>();
             response.put("autenticado", false);
             response.put("message", "Credenciais inválidas");
             return ResponseEntity.status(401).body(response);
@@ -54,7 +55,8 @@ public class UsuarioController {
     @PutMapping("/{usuarioId}/perfil")
     public ResponseEntity<Usuario> atualizarPerfil(@PathVariable String usuarioId, @RequestBody DadosPerfil dados) {
         try {
-            Usuario usuario = usuarioService.atualizarPerfil(usuarioId, dados);
+            UUID id = UUID.fromString(usuarioId);
+            Usuario usuario = usuarioService.atualizarPerfil(id, dados);
             if (usuario != null) {
                 return ResponseEntity.ok(usuario);
             } else {
@@ -67,7 +69,8 @@ public class UsuarioController {
 
     @GetMapping("/{usuarioId}")
     public ResponseEntity<Usuario> obterPerfilUsuario(@PathVariable String usuarioId) {
-        Usuario usuario = usuarioService.obterPerfilUsuario(usuarioId);
+        UUID id = UUID.fromString(usuarioId);
+        Usuario usuario = usuarioService.obterPerfilUsuario(id);
 
         if (usuario != null) {
             return ResponseEntity.ok(usuario);
@@ -85,7 +88,8 @@ public class UsuarioController {
     @DeleteMapping("/{usuarioId}")
     public ResponseEntity<Void> desativarUsuario(@PathVariable String usuarioId) {
         try {
-            usuarioService.desativarUsuario(usuarioId);
+            UUID id = UUID.fromString(usuarioId);
+            usuarioService.desativarUsuario(id);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
