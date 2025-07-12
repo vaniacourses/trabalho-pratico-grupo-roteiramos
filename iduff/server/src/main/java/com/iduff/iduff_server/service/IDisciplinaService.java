@@ -17,4 +17,6 @@ public interface IDisciplinaService {
     void associarPreRequisito(UUID disciplinaId, UUID preRequisitoId);
 
     void desassociarPreRequisito(UUID disciplinaId, UUID preRequisitoId);
+
+    List<Disciplina> buscarPorNomeOuCodigo(String busca);
 }

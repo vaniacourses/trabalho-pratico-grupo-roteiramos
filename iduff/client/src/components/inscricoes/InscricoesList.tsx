@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ClipboardList,
   Search,
@@ -15,6 +15,7 @@ import {
   StatusUsuario,
 } from "../../types";
 import { useAuth } from "../../context/useAuth";
+import DisciplinaTurmaModal from "../shared/DisciplinaTurmaModal";
 
 const InscricoesList: React.FC = () => {
   const { user } = useAuth();
@@ -23,57 +24,16 @@ const InscricoesList: React.FC = () => {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("");
+  const [openModal, setOpenModal] = useState(false);
 
   // Mock data - in real app this would come from API
-  const [inscricoes] = useState<Inscricao[]>([
-    {
-      id: "1",
-      data: "2024-01-15",
-      periodo: "2024.1",
-      status: StatusInscricao.ATIVA,
-      aluno: {
+  const [inscricoes] = useState<Inscricao[]>(
+    [
+      {
         id: "1",
-        nome: "João Silva",
-        login: "joao.silva",
-        email: "joao.silva@id.uff.br",
-        cpf: "123.456.789-01",
-        telefone: "(21) 99999-9999",
-        tipo: TipoUsuario.ALUNO,
-        status: StatusUsuario.ATIVO,
-        dataRegistro: new Date(),
-        matricula: "2023001",
-      },
-      turma: {
-        id: "1",
-        nome: "Turma A",
-        limiteVagas: 40,
-        local: "Lab 1",
-        disciplina: {
-          id: "1",
-          codigo: "CC101",
-          nome: "Programação I",
-          cargaHoraria: 60,
-          ementa: "Introdução à programação",
-        },
-        professor: {
-          id: "2",
-          nome: "Prof. Maria Santos",
-          login: "maria.santos",
-          email: "maria.santos@id.uff.br",
-          cpf: "987.654.321-00",
-          telefone: "(21) 88888-8888",
-          tipo: TipoUsuario.PROFESSOR,
-          status: StatusUsuario.ATIVO,
-          dataRegistro: new Date(),
-          departamento: "Ciência da Computação",
-        },
-        horarios: [],
-      },
-      solicitacao: {
-        id: "1",
-        data: "2024-01-10",
-        status: StatusSolicitacao.APROVADA,
-        tipo: "INSCRICAO_DISCIPLINA",
+        data: "2024-01-15",
+        periodo: "2024.1",
+        status: StatusInscricao.ATIVA,
         aluno: {
           id: "1",
           nome: "João Silva",
@@ -112,56 +72,69 @@ const InscricoesList: React.FC = () => {
           },
           horarios: [],
         },
+        solicitacao: {
+          id: "1",
+          data: "2024-01-10",
+          status: StatusSolicitacao.APROVADA,
+          tipo: "INSCRICAO_DISCIPLINA",
+          aluno: {
+            id: "1",
+            nome: "João Silva",
+            login: "joao.silva",
+            email: "joao.silva@id.uff.br",
+            cpf: "123.456.789-01",
+            telefone: "(21) 99999-9999",
+            tipo: TipoUsuario.ALUNO,
+            status: StatusUsuario.ATIVO,
+            dataRegistro: new Date(),
+            matricula: "2023001",
+          },
+          turma: {
+            id: "1",
+            nome: "Turma A",
+            limiteVagas: 40,
+            local: "Lab 1",
+            disciplina: {
+              id: "1",
+              codigo: "CC101",
+              nome: "Programação I",
+              cargaHoraria: 60,
+              ementa: "Introdução à programação",
+            },
+            professor: {
+              id: "2",
+              nome: "Prof. Maria Santos",
+              login: "maria.santos",
+              email: "maria.santos@id.uff.br",
+              cpf: "987.654.321-00",
+              telefone: "(21) 88888-8888",
+              tipo: TipoUsuario.PROFESSOR,
+              status: StatusUsuario.ATIVO,
+              dataRegistro: new Date(),
+              departamento: "Ciência da Computação",
+            },
+            horarios: [],
+          },
+        },
       },
-    },
-  ]);
+    ]
+  );
 
-  const [solicitacoes] = useState<Solicitacao[]>([
-    {
-      id: "2",
-      data: "2024-01-20",
-      status: StatusSolicitacao.PENDENTE,
-      tipo: "INSCRICAO_DISCIPLINA",
-      aluno: {
-        id: "1",
-        nome: "João Silva",
-        login: "joao.silva",
-        email: "joao.silva@id.uff.br",
-        cpf: "123.456.789-01",
-        telefone: "(21) 99999-9999",
-        tipo: TipoUsuario.ALUNO,
-        status: StatusUsuario.ATIVO,
-        dataRegistro: new Date(),
-        matricula: "2023001",
-      },
-      turma: {
-        id: "2",
-        nome: "Turma B",
-        limiteVagas: 30,
-        local: "Sala 201",
-        disciplina: {
-          id: "2",
-          codigo: "MAT101",
-          nome: "Cálculo I",
-          cargaHoraria: 80,
-          ementa: "Limites e derivadas",
-        },
-        professor: {
-          id: "3",
-          nome: "Prof. Carlos Matemático",
-          login: "carlos.math",
-          email: "carlos.math@id.uff.br",
-          cpf: "456.789.123-45",
-          telefone: "(21) 77777-7777",
-          tipo: TipoUsuario.PROFESSOR,
-          status: StatusUsuario.ATIVO,
-          dataRegistro: new Date(),
-          departamento: "Matemática",
-        },
-        horarios: [],
-      },
-    },
-  ]);
+  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetch(`/api/inscricoes/solicitacoes/aluno/${user.id}`)
+        .then((res) => res.json())
+        .then((data) => setSolicitacoes(data));
+    }
+  }, [user?.id]);
+
+  const fetchSolicitacoes = () => {
+    fetch(`/api/inscricoes/solicitacoes/aluno/${user?.id}`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setSolicitacoes(Array.isArray(data) ? data : []));
+  };
 
   const getStatusBadge = (status: StatusInscricao | StatusSolicitacao) => {
     const statusConfig = {
@@ -250,7 +223,17 @@ const InscricoesList: React.FC = () => {
               </div>
             </div>
             {user?.tipo === TipoUsuario.ALUNO && (
-              <button className="btn-primary">Nova Inscrição</button>
+              <>
+                <button className="btn-primary" onClick={() => setOpenModal(true)}>
+                  Nova Inscrição
+                </button>
+                <DisciplinaTurmaModal
+                  open={openModal}
+                  onClose={() => setOpenModal(false)}
+                  userId={user?.id}
+                  onSolicitacaoCriada={fetchSolicitacoes}
+                />
+              </>
             )}
           </div>
         </div>

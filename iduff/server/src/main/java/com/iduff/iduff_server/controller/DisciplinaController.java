@@ -57,8 +57,13 @@ public class DisciplinaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Disciplina>> listarDisciplinas() {
-        List<Disciplina> disciplinas = disciplinaService.listarDisciplinas();
+    public ResponseEntity<List<Disciplina>> listarDisciplinas(@RequestParam(required = false) String busca) {
+        List<Disciplina> disciplinas;
+        if (busca != null && !busca.isEmpty()) {
+            disciplinas = disciplinaService.buscarPorNomeOuCodigo(busca);
+        } else {
+            disciplinas = disciplinaService.listarDisciplinas();
+        }
         return ResponseEntity.ok(disciplinas);
     }
 

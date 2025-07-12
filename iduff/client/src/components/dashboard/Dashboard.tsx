@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import { TipoUsuario } from "../../types";
 import {
@@ -9,8 +9,10 @@ import {
   GraduationCap,
   TrendingUp,
 } from "lucide-react";
+import DisciplinaTurmaModal from "../shared/DisciplinaTurmaModal";
 
 const Dashboard: React.FC = () => {
+  const [openModal, setOpenModal] = useState(false);
   const { user } = useAuth();
 
   const getWelcomeMessage = () => {
@@ -241,15 +243,27 @@ const Dashboard: React.FC = () => {
             </h2>
             <div className="grid gap-4">
               {getQuickActions().map((action, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
+                <div key={index}>
                   <h3 className="font-medium text-gray-900">{action.title}</h3>
                   <p className="text-sm text-gray-600 mt-1">
                     {action.description}
                   </p>
-                  <button className="btn-primary mt-3">Acessar</button>
+                  {action.title === "Nova Inscrição" ? (
+                    <>
+                      <button className="btn-primary" onClick={() => setOpenModal(true)}>
+                        Acessar
+                      </button>
+                      <DisciplinaTurmaModal
+                        open={openModal}
+                        onClose={() => setOpenModal(false)}
+                        userId={user?.id}
+                      />
+                    </>
+                  ) : (
+                    <button className="btn-primary">
+                      Acessar
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

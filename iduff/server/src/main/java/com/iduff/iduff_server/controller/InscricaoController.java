@@ -3,6 +3,7 @@ package com.iduff.iduff_server.controller;
 import com.iduff.iduff_server.service.IInscricaoService;
 import com.iduff.iduff_server.entity.Solicitacao;
 import com.iduff.iduff_server.entity.Inscricao;
+import com.iduff.iduff_server.dto.SolicitacaoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,9 @@ public class InscricaoController {
     private IInscricaoService inscricaoService;
 
     @PostMapping("/solicitacao")
-    public ResponseEntity<Solicitacao> iniciarSolicitacaoInscricao(@RequestBody Map<String, String> dados) {
-        try {
-            UUID alunoId = UUID.fromString(dados.get("alunoId"));
-            UUID turmaId = UUID.fromString(dados.get("turmaId"));
-
-            Solicitacao solicitacao = inscricaoService.iniciarSolicitacaoInscricao(alunoId, turmaId);
-            return ResponseEntity.ok(solicitacao);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> iniciarSolicitacaoInscricao(@RequestBody SolicitacaoRequest request) {
+        Solicitacao solicitacao = inscricaoService.iniciarSolicitacaoInscricao(request.getAlunoId(), request.getTurmaId());
+        return ResponseEntity.ok(solicitacao);
     }
 
     @PutMapping("/solicitacao/{solicitacaoId}/aprovar")
@@ -99,5 +93,11 @@ public class InscricaoController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/solicitacoes/aluno/{alunoId}")
+    public ResponseEntity<List<Solicitacao>> listarSolicitacoesAluno(@PathVariable UUID alunoId) {
+        List<Solicitacao> solicitacoes = inscricaoService.obterSolicitacoesAluno(alunoId);
+        return ResponseEntity.ok(solicitacoes);
     }
 }

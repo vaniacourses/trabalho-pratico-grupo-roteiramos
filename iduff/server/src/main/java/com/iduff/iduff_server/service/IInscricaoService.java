@@ -19,4 +19,6 @@ public interface IInscricaoService {
     List<Inscricao> obterInscricoesAluno(UUID alunoId);
 
     Inscricao obterDetalhesInscricao(UUID inscricaoId);
+
+    List<Solicitacao> obterSolicitacoesAluno(UUID alunoId);
 }

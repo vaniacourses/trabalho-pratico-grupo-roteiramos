@@ -3,6 +3,8 @@ package com.iduff.iduff_server.service.impl;
 import com.iduff.iduff_server.service.IDisciplinaService;
 import com.iduff.iduff_server.dto.DadosDisciplina;
 import com.iduff.iduff_server.entity.Disciplina;
+import com.iduff.iduff_server.repository.DisciplinaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
@@ -12,6 +14,9 @@ import java.util.HashMap;
 
 @Service
 public class DisciplinaServiceImpl implements IDisciplinaService {
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
 
     // In-memory storage for demo purposes
     private final Map<UUID, Disciplina> disciplinas = new HashMap<>();
@@ -66,5 +71,10 @@ public class DisciplinaServiceImpl implements IDisciplinaService {
         if (disciplina != null && preRequisito != null) {
             disciplina.removerPreRequisito(preRequisito);
         }
+    }
+
+    @Override
+    public List<Disciplina> buscarPorNomeOuCodigo(String busca) {
+        return disciplinaRepository.findByNomeContainingIgnoreCaseOrCodigoContainingIgnoreCase(busca, busca);
     }
 }
